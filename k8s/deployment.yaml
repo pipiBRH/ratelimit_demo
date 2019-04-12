@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ratelimit-deployment
+  labels:
+    app: ratelimit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ratelimit
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5    
+  template:
+    metadata:
+      labels:
+        app: ratelimit
+    spec:
+      containers:
+        - name: ratelimit
+          image: asia.gcr.io/brave-smile-234203/ratelimit:latest
+          ports:
+            - name: api-port
+              containerPort: 4000
+          resources: 
+            requests:
+              cpu: 500m
+              memory: 500Mi
+            limits:
+              cpu: 1000M
+              memory: 1000Mi
+          livenessProbe:
+            httpGet:
+              path: /hc
+              port: api-port
+            initialDelaySeconds: 15
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /hc
+              port: api-port
+            initialDelaySeconds: 15
+            timeoutSeconds: 30
