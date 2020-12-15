@@ -1,7 +1,7 @@
 # ratelimit_demo
 
-## demo site
-<https://api.hoyoyo.xyz>
-
-## 備註
-此服務部屬在gcp的gke上
+## How to spin up
+```
+go mod download
+go run main.go
+```
